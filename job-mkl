@@ -6,5 +6,6 @@
 
 module load cs5220
 cd $PBS_O_WORKDIR
+export MKL_NUM_THREADS=1
 ./matmul-mkl
 
