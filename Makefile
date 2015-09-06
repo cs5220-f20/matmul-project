@@ -65,6 +65,10 @@ timing-%.csv: matmul-%
 timing.pdf: $(TIMINGS)
 	python plotter.py $(BUILDS)
 
+.PHONY: plot
+plot:
+	python plotter.py $(BUILDS)
+
 # ---
 
 .PHONY:	clean realclean 
