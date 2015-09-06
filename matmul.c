@@ -50,8 +50,8 @@ const int test_sizes[] = {
 # define MAX_SIZE 229u
 #else
     255, 256, 257, 319, 320, 321, 417, 479, 480, 511, 512, 639, 640,
-    767, 768, 769,
-# define MAX_SIZE 769u
+    767, 768, 769, 1023, 1024, 1025, 1525, 1526, 1527
+# define MAX_SIZE 1527u
 #endif
 };
 

@@ -6,10 +6,13 @@
 # For example, the default setup has a Makefile.in.icc and Makefile.in.gcc.
 
 PLATFORM=icc
+BUILDS=basic blocked f2c blas mkl
+DRIVERS=$(addprefix matmul-,$(BUILDS))
+TIMINGS=$(addsuffix .csv,$(addprefix timing-,$(BUILDS)))
 include Makefile.in.$(PLATFORM)
 
 .PHONY:	all
-all:	matmul-mine matmul-basic matmul-blocked matmul-blas matmul-f2c
+all:	$(DRIVERS)
 
 # ---
 # Rules to build the drivers
@@ -47,17 +50,20 @@ dgemm_mkl.o: dgemm_blas.c
 # ---
 # Rules for building timing CSV outputs
 
-.PHONY: run run-c4
-run-c4: info-mine.out info-basic.out info-blocked.out \
-	info-f2c.out info-blas.out
-run:    timing-mine.csv timing-basic.csv timing-blocked.csv \
-	timing-f2c.csv timing-blas.csv
+.PHONY: run run-local
+run:    $(TIMINGS)
 
-info-%.out: matmul-%
-	csub ./runner.sh ./$< $*
+run-local:
+	( for build in $(BUILDS) do ; ./matmul-$$f ; done )
 
 timing-%.csv: matmul-%
-	./$<
+	qsub job-$*
+
+# ---
+#  Rules for plotting
+
+timing.pdf: $(TIMINGS)
+	python plotter.py $(BUILDS)
 
 # ---
 
@@ -66,6 +72,6 @@ clean:
 	rm -f matmul-* *.o
 	rm -f csub-*
 
-realclean:	clean
+realclean: clean
 	rm -f *~ timing-*.csv info-*.out timing.pdf
 
