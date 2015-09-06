@@ -12,9 +12,9 @@ def make_plot(runs):
     "Plot results of timing trials"
     for arg in runs:
         df = pd.read_csv("timing-{0}.csv".format(arg))
-        plt.plot(df['size'], df['mflop'], label=arg)
+        plt.plot(df['size'], df['mflop']/1e3, label=arg)
     plt.xlabel('Dimension')
-    plt.ylabel('Mflop/s')
+    plt.ylabel('Gflop/s')
 
 def show(runs):
     "Show plot of timing runs (for interactive use)"

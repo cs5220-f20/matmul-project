@@ -1,6 +1,10 @@
+# Versions to build
+BUILDS=mine basic blocked f2c blas mkl
+
 # C and Fortran compilers
 CC=icc
 FC=ifort 
+LD=ifort
 
 # Compiler optimization flags.  You will definitely want to play with these!
 OPTFLAGS = -O3
@@ -18,3 +22,8 @@ OBJS = matmul.o
 # Libraries and include files for BLAS
 LIBBLAS=-lopenblas
 INCBLAS=
+
+# Libraries and include files for BLAS
+LIBMKL=-lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -lm
+INCMKL=
+

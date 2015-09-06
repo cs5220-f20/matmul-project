@@ -1,6 +1,10 @@
+# Versions to build
+BUILDS=mine basic blocked f2c veclib
+
 # C and Fortran compilers
-CC=gcc-mp-4.8
-FC=gfortran-mp-4.8
+CC=gcc-5
+FC=gfortran-5
+LD=$(FC)
 
 # Compiler optimization flags.  You will definitely want to play with these!
 OPTFLAGS = -O3 
@@ -17,5 +21,4 @@ OBJS = matmul.o
 
 # Libraries and include files for ATLAS
 LIBBLAS=-framework Accelerate
-#INCBLAS=-DOSX_ACCELERATE -D__ACCELERATE__
-INCBLAS=-D__ACCELERATE__
+INCBLAS=-DOSX_ACCELERATE
