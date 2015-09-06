@@ -23,6 +23,9 @@ matmul-f2c: $(OBJS) dgemm_f2c.o dgemm_f2c_desc.o fdgemm.o
 matmul-blas: $(OBJS) dgemm_blas.o
 	$(LD) -o $@ $^ $(LDFLAGS) $(LIBS) $(LIBBLAS)
 
+matmul-mkl: $(OBJS) dgemm_mkl.o
+	$(LD) -o $@ $^ $(LDFLAGS) $(LIBS) $(LIBMKL)
+
 # --
 # Rules to build object files
 
@@ -37,6 +40,9 @@ matmul.o: matmul.c
 
 dgemm_blas.o: dgemm_blas.c
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $(INCBLAS) $< 
+
+dgemm_mkl.o: dgemm_blas.c
+	$(CC) -o $@ -c $(CFLAGS) $(CPPFLAGS) $(INCMKL) $< 
 
 # ---
 # Rules for building timing CSV outputs
