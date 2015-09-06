@@ -1,6 +1,10 @@
+# Versions to build
+BUILDS=mine basic blocked f2c blas
+
 # C and Fortran compilers
-CC=gcc-mp-4.8
-FC=gfortran-mp-4.8
+CC=gcc-5
+FC=gfortran-5
+LD=$(CC)
 
 # Compiler optimization flags.  You will definitely want to play with these!
 OPTFLAGS = -O3 

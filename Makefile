@@ -6,10 +6,10 @@
 # For example, the default setup has a Makefile.in.icc and Makefile.in.gcc.
 
 PLATFORM=icc
-BUILDS=basic blocked f2c blas mkl
+
+include Makefile.in.$(PLATFORM)
 DRIVERS=$(addprefix matmul-,$(BUILDS))
 TIMINGS=$(addsuffix .csv,$(addprefix timing-,$(BUILDS)))
-include Makefile.in.$(PLATFORM)
 
 .PHONY:	all
 all:	$(DRIVERS)
@@ -74,8 +74,7 @@ plot:
 .PHONY:	clean realclean 
 clean:
 	rm -f matmul-* *.o
-	rm -f csub-*
 
 realclean: clean
-	rm -f *~ timing-*.csv info-*.out timing.pdf
+	rm -f *~ timing-*.csv timing.pdf
 

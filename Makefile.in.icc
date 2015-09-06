@@ -1,3 +1,6 @@
+# Versions to build
+BUILDS=mine basic blocked f2c blas mkl
+
 # C and Fortran compilers
 CC=icc
 FC=ifort 
