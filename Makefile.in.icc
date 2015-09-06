@@ -1,6 +1,7 @@
 # C and Fortran compilers
 CC=icc
 FC=ifort 
+LD=ifort
 
 # Compiler optimization flags.  You will definitely want to play with these!
 OPTFLAGS = -O3
