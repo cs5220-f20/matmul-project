@@ -5,7 +5,7 @@
 # to play with, you can put them in an appropriately-named Makefile.in.
 # For example, the default setup has a Makefile.in.icc and Makefile.in.gcc.
 
-PLATFORM=icc
+PLATFORM=mac
 
 include Makefile.in.$(PLATFORM)
 DRIVERS=$(addprefix matmul-,$(BUILDS))
@@ -29,6 +29,9 @@ matmul-blas: $(OBJS) dgemm_blas.o
 matmul-mkl: $(OBJS) dgemm_mkl.o
 	$(LD) -o $@ $^ $(LDFLAGS) $(LIBS) $(LIBMKL)
 
+matmul-veclib: $(OBJS) dgemm_veclib.o
+	$(LD) -o $@ $^ $(LDFLAGS) $(LIBS) -framework Accelerate
+
 # --
 # Rules to build object files
 
@@ -47,6 +50,9 @@ dgemm_blas.o: dgemm_blas.c
 dgemm_mkl.o: dgemm_blas.c
 	$(CC) -o $@ -c $(CFLAGS) $(CPPFLAGS) $(INCMKL) $< 
 
+dgemm_veclib.o: dgemm_blas.c
+	clang -o $@ -c $(CFLAGS) $(CPPFLAGS) -DOSX_ACCELERATE $< 
+
 # ---
 # Rules for building timing CSV outputs
 
@@ -54,7 +60,7 @@ dgemm_mkl.o: dgemm_blas.c
 run:    $(TIMINGS)
 
 run-local:
-	( for build in $(BUILDS) do ; ./matmul-$$f ; done )
+	( for build in $(BUILDS) ; do ./matmul-$$build ; done )
 
 timing-%.csv: matmul-%
 	qsub job-$*
