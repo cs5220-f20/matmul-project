@@ -63,13 +63,10 @@ run-local:
 	( for build in $(BUILDS) ; do ./matmul-$$build ; done )
 
 timing-%.csv: matmul-%
-	qsub job-$*
+	qsub job-$*.pbs
 
 # ---
 #  Rules for plotting
-
-timing.pdf: $(TIMINGS)
-	python plotter.py $(BUILDS)
 
 .PHONY: plot
 plot:
