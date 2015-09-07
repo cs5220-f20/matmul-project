@@ -168,13 +168,21 @@ Note that the `.pbs` scripts do a little more than just running the
 job; they also set environment variables so that OpenBLAS, VecLib,
 and MKL don't get an unfair advantage by exploiting multiple cores.
 
-You can also manually submit the `.pbs` scripts to the compute nodes by typing 
+You can also manually submit the `.pbs` scripts to the compute nodes by using 
 
     qsub job-*.pbs
 
 i.e. if you want to benchmark only your own code, you would type `qsub job-mine.pbs`. Note that this is what happens "under the hood" when you run the timers on the compute nodes with make commands.  
 
-Note that the intel compiler isn't loaded into your environment by default, and thus running make commands will not work unless you load the cs5220 module with the command `module load cs5220`.  
+To clear up some of your workspace, use 
+
+    make clean
+
+which will remove executables and compute node logs (but not your code or benchmarks). To remove everything except for code, use
+
+    make realclean
+
+
 ## Plotting results
 
 You can produce timing plots by running
