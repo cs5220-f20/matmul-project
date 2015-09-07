@@ -25,8 +25,7 @@ The main files are:
 * `plotter.py`: Python script for drawing performance plots
 * `runner.sh`: Helper script for running the timer on the instructional nodes
 
-You will probably mostly be looking at `Makefile.in` and `dgemm_*.c`.
-
+You will probably mostly be looking at `Makefile.in` and `dgemm_*.c`. Note that "dgemm" stands for "**D**ouble Precision **GE**neral **M**atrix **M**ultiply".   
 ## Makefile system
 
 I have built the reference code with three compilers:
@@ -48,6 +47,7 @@ script for these configurations, I would welcome it!
 I recommend using the Intel compiler on the cluster.  The optimizer
 generally does much better than the GCC optimizer on this type of code.
 
+For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial] (http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
 ### Notes on GCC
 
 You may notice the `-std=gnu99` flag in `Makefile.in.gcc`.  This tells
@@ -164,10 +164,17 @@ to use
 
     make run-local
 
-Note that the `pbs` scripts do a little more than just running the
+Note that the `.pbs` scripts do a little more than just running the
 job; they also set environment variables so that OpenBLAS, VecLib,
 and MKL don't get an unfair advantage by exploiting multiple cores.
 
+You can also manually submit the `.pbs` scripts to the compute nodes by typing 
+
+    qsub job-*.pbs
+
+i.e. if you want to benchmark only your own code, you would type `qsub job-mine.pbs`. Note that this is what happens "under the hood" when you run the timers on the compute nodes with make commands.  
+
+Note that the intel compiler isn't loaded into your environment by default, and thus running make commands will not work unless you load the cs5220 module with the command `module load cs5220`.  
 ## Plotting results
 
 You can produce timing plots by running
