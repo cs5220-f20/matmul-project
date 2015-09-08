@@ -25,15 +25,14 @@ The main files are:
 * `plotter.py`: Python script for drawing performance plots
 * `runner.sh`: Helper script for running the timer on the instructional nodes
 
-You will probably mostly be looking at `Makefile.in` and `dgemm_*.c`.
-
+You will probably mostly be looking at `Makefile.in` and `dgemm_*.c`. Note that "dgemm" stands for "**D**ouble Precision **GE**neral **M**atrix **M**ultiply".   
 ## Makefile system
 
 I have built the reference code with three compilers:
 
-1.  GCC 4.8.2 on the C4 Linux cluster (`gcc`)
+1.  GCC 4.9.2 on the C4 Linux cluster (`gcc`)
 2.  The Intel compilers on the C4 Linux cluster (`icc`)
-3.  GCC 4.8.2 on my OS X 10.9 laptop (`mac`)
+3.  Homebrew GCC 5.2.0 on my OS X 10.9 laptop (`mac`)
 
 You can switch between these options by adding `PLATFORM=icc` (for
 example) to your `make` command, or by changing the `PLATFORM=gcc`
@@ -48,6 +47,7 @@ script for these configurations, I would welcome it!
 I recommend using the Intel compiler on the cluster.  The optimizer
 generally does much better than the GCC optimizer on this type of code.
 
+For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial] (http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
 ### Notes on GCC
 
 You may notice the `-std=gnu99` flag in `Makefile.in.gcc`.  This tells
@@ -67,10 +67,10 @@ The driver code (`matmul.c`) uses the OpenMP `omp_get_wtime` routine
 for timing; unfortunately, the Clang compiler does not yet include
 OpenMP by default.  This means that if you want to use OpenMP -- even
 the timing routines -- you cannot use the default compiler under OS X
-Mavericks.  I have used a build of GCC 4.8.2 using MacPorts.  If you
+Mavericks.  I have used a build of GCC 5.2.0 using HomeBrew.  If you
 are trying things out on an OS X box, I recommend you do the same.
 
-If you are running on C4 and want to try out the Clang compiler for
+If you are running on totient and want to try out the Clang compiler for
 building your matrix multiply kernel, you certainly may.  The driver
 uses OpenMP for timing; the kernel can be compiled with different flags.
 
@@ -80,17 +80,15 @@ time this class is offered!
 
 ### Notes on the Intel compilers
 
-You must load the Intel module (`module load icsxe`) before building
-with the Intel compilers.  Once you have loaded this module, you cannot
-build the driver with GCC until after you unload it; there are conflicts
-between Intel's version of standard header files and the GCC version.
+You must load the Intel module (`module load psxe`) before building
+with the Intel compilers.
 
 There are two things in the `Makefile.in.icc` file that are worth
 noting if you want to use the Intel compilers and mix C and Fortran
 for this assignment.  First, we require `libirng` (the `-lirng` flag
 in the `LIBS` variable) in order to use `drand48`.  This library is
 included by default when we link using `icc`, but not when we link
-using `ifort`.  Second, we require the flag `-nofor-main` to tell the
+using `ifort`.  Second, we require the flag `-nofor_main` to tell the
 Fortran compiler that we are using C rather than Fortran to define the
 main routine.
 
@@ -101,15 +99,12 @@ the performance!
 
 ### Notes on system BLAS
 
-On the C4 cluster, the Makefile is configured to link against OpenBLAS,
-a high-performance open-source BLAS library based on the Goto BLAS.
-One could also link against the MKL BLAS (with the Intel compilers),
-but I have not configured this.
+On the totient cluster, the Makefile is configured to link against
+OpenBLAS, a high-performance open-source BLAS library based on the Goto BLAS.
+This build also lets you link against the MKL BLAS (with the Intel compilers).
 
-On OS X, the Makefile is configured to link against the Accelerate framework.
-If you are using a different version of OS X, you may have to fiddle a little
-with the compiler macros in order to get this to work.  In particular, the
-`cblas.h` file at one point was not a part of the framework.
+On OS X, the Makefile is configured to link against the Accelerate
+framework with the `veclib` tag.
 
 ### Notes on mixed C-Fortran programming
 
@@ -154,26 +149,58 @@ also provide the file name as an argument, i.e.
 
     ./matmul-blocked timing-blocked.csv
 
-The Makefile has targets for running the timer on the instructional nodes
-on C4 using the `runner.sh` script.  For example,
+These commands run benchmarks on the *local machine*. If you're logged into Totient, this will usually be the *head node*. 
+To run benchmarks on a *compute node*, which will give completely different results, you want to use make commands (listed below). 
+Make sure to keep things consistent i.e. don't compare a head node benchmark with a computer node benchmark. 
+While testing on the head node is perfectly fine, your submitted benchmarks should be from a compute node, as I want to keep benchmarks consistent among the class.  
 
-    make info-blocked.out
+The Makefile has targets for running the timer on the compute nodes
+on totient using the `job-*.pbs` scripts.  For example,
 
-on C4 will submit an HTCondor job to produce the timing-blocked.csv
-file (and info-blocked.out).  To run all the timers, you can use
+    make timing-blocked.csv
 
-    make run-c4
+on totient will submit a PBS job to produce the timing-blocked.csv
+file.  To run all the timers on the compute nodes, you can use
 
-Note that the `runner.sh` script does a little more than just running
-the job; it also reports what host the job ran on, saves the standard
-output to `info-XXX.out`, and sets the `OMP_NUM_THREADS` variable so
-that runs using OpenBLAS don't get an unfair advantage by exploiting
-multiple cores.
+    make run
+
+To run all the timers on your local machine, you will probably want
+to use
+
+    make run-local
+
+Note that the `.pbs` scripts do a little more than just running the
+job; they also set environment variables so that OpenBLAS, VecLib,
+and MKL don't get an unfair advantage by exploiting multiple cores.
+
+You can also manually submit the `.pbs` scripts to the compute nodes by using 
+
+    qsub job-*.pbs
+
+i.e. if you want to benchmark only your own code, you would type `qsub job-mine.pbs`. Note that this is what happens "under the hood" when you run the timers on the compute nodes with make commands.  
+
+To clear up some of your workspace, use 
+
+    make clean
+
+which will remove executables and compute node logs (but not your code or benchmarks). To remove everything except for code, use
+
+    make realclean
+
 
 ## Plotting results
 
-The `plotter.py` script loads a batch of timings and turns them into
-a plot which is saved to `timing.pdf`.  For example, running
+You can produce timing plots by running
+
+    make plot
+
+The plotter assumes that all the relevant CSV files are already
+in place.  Note, though, that you can (for example) put the CSV
+files from totient onto your laptop and run `make plot`.
+
+You can also directly use the `plotter.py` script.  The `plotter.py`
+script loads a batch of timings and turns them into a plot which is
+saved to `timing.pdf`.  For example, running
 
     ./plotter.py basic blocked blas
 
@@ -185,3 +212,11 @@ will compare the contents of `timing-basic.csv`, `timing-blocked.csv`,
 and `timing-blas.csv`.  Note that you need to be using the Anaconda
 module if you are going to explicitly run the Python version, since the
 script uses Pandas (which the system Python lacks).
+
+
+## Optimization Tips and Tricks
+
+Please refer to these [notes](http://www.cs.cornell.edu/~bindel/class/cs5220-f11/notes/serial-tuning.pdf) to get started. The notes discuss blocking, buffering, SEE instructions, and auto-tuning, among other optimizations.
+The [Roofline Paper] (http://www.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf) discussed in class on 9/08/2015 is also worth looking at, also you might have to do a bit of extra reading. 
+The previous Project instructions for this assignment can be found [here] (https://bitbucket.org/dbindel/cs5220-s14/wiki/HW1). 
+Assume for the time being that the final submission instructions for this assignment have not changed. 
