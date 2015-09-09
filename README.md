@@ -216,7 +216,7 @@ script uses Pandas (which the system Python lacks).
 
 ## Optimization Tips and Tricks
 
-Please refer to these [notes](http://www.cs.cornell.edu/~bindel/class/cs5220-f11/notes/serial-tuning.pdf) to get started. The notes discuss blocking, buffering, SEE instructions, and auto-tuning, among other optimizations.
+Please refer to these [notes](http://www.cs.cornell.edu/~bindel/class/cs5220-f11/notes/serial-tuning.pdf) to get started. The notes discuss blocking, buffering, SSE instructions, and auto-tuning, among other optimizations.
 The [Roofline Paper] (http://www.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf) discussed in class on 9/08/2015 is also worth looking at, also you might have to do a bit of extra reading. 
 The previous Project instructions for this assignment can be found [here] (https://bitbucket.org/dbindel/cs5220-s14/wiki/HW1). 
 Assume for the time being that the final submission instructions for this assignment have not changed. 
