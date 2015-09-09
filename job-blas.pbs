@@ -5,6 +5,7 @@
 #PBS -j oe
 
 module load cs5220
+module load openblas
 cd $PBS_O_WORKDIR
 ./matmul-blas
 
