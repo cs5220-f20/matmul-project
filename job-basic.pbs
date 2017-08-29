@@ -4,6 +4,6 @@
 #PBS -N matmul-basic
 #PBS -j oe
 
-module load cs5220
+module load intel
 cd $PBS_O_WORKDIR
 ./matmul-basic

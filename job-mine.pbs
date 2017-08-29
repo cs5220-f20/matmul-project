@@ -4,7 +4,7 @@
 #PBS -N matmul-mine
 #PBS -j oe
 
-module load cs5220
+module load intel
 cd $PBS_O_WORKDIR
 ./matmul-mine
 
