@@ -20,8 +20,9 @@ LIBS = -lm -lirng
 OBJS = matmul.o
 
 # Libraries and include files for BLAS
-LIBBLAS=-lopenblas
-INCBLAS=
+LIBBLAS=`pkg-config --libs openblas`
+INCBLAS=`pkg-config --cflags openblas`
+
 
 # Libraries and include files for BLAS
 LIBMKL=-lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -lm

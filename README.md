@@ -30,7 +30,7 @@ You will probably mostly be looking at `Makefile.in` and `dgemm_*.c`. Note that 
 
 I have built the reference code with three compilers:
 
-1.  GCC 4.9.2 on the C4 Linux cluster (`gcc`)
+1.  GCC 7.2.0 on the C4 Linux cluster (`gcc`)
 2.  The Intel compilers on the C4 Linux cluster (`icc`)
 3.  Homebrew GCC 5.2.0 on my OS X 10.9 laptop (`mac`)
 

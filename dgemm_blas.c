@@ -1,6 +1,8 @@
 #ifdef OSX_ACCELERATE
 #  include <Accelerate/Accelerate.h>
-#else
+#elif defined(__ICC) || defined(__INTEL_COMPILER)
+#  include <mkl_cblas.h>
+#elif defined(__GNUC__) || defined(__GNUG__)
 #  include <cblas.h>
 #endif
 
