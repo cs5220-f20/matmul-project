@@ -48,7 +48,10 @@ I recommend using the Intel compiler on the cluster.  The optimizer
 generally does much better than the GCC optimizer on this type of code.
 
 For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial] (http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
-### Notes on GCC
+### Building with GCC
+
+You must load the gcc and openblas modules before building:
+`module load gcc; module load openblas`
 
 You may notice the `-std=gnu99` flag in `Makefile.in.gcc`.  This tells
 the compiler that we want to use the C99 language variant with
@@ -80,8 +83,8 @@ time this class is offered!
 
 ### Notes on the Intel compilers
 
-You must load the Intel module (`module load psxe`) before building
-with the Intel compilers.
+You must load the intel, gcc, and openblas modules before building:
+`module load intel; module load gcc; module load openblas`
 
 There are two things in the `Makefile.in.icc` file that are worth
 noting if you want to use the Intel compilers and mix C and Fortran
@@ -100,7 +103,8 @@ the performance!
 ### Notes on system BLAS
 
 On the totient cluster, the Makefile is configured to link against
-OpenBLAS, a high-performance open-source BLAS library based on the Goto BLAS.
+OpenBLAS, a high-performance open-source BLAS library based on the Goto BLAS (as an aside, 
+there is an excellent NYTimes [article](http://www.nytimes.com/2005/11/28/technology/writing-the-fastest-code-by-hand-for-fun-a-human-computer-keeps.html?mcubz=1)) about the history behind Goto BLAS)
 This build also lets you link against the MKL BLAS (with the Intel compilers).
 
 On OS X, the Makefile is configured to link against the Accelerate
