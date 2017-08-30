@@ -48,7 +48,7 @@ I recommend using the Intel compiler on the cluster.  The optimizer
 generally does much better than the GCC optimizer on this type of code.
 
 For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial] (http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
-### Building with GCC
+### Building with GNU Compilers
 
 You must load the gcc and openblas modules before building:
 `module load gcc; module load openblas`
@@ -64,24 +64,7 @@ of the initializer clause in a `for` loop.
 Why do we assume that a 25-year-old standard takes precedence over the
 "new" 15-year-old standard?  Beats me, but this is what it is.
 
-### Notes on Clang and OS X
-
-The driver code (`matmul.c`) uses the OpenMP `omp_get_wtime` routine
-for timing; unfortunately, the Clang compiler does not yet include
-OpenMP by default.  This means that if you want to use OpenMP -- even
-the timing routines -- you cannot use the default compiler under OS X
-Mavericks.  I have used a build of GCC 5.2.0 using HomeBrew.  If you
-are trying things out on an OS X box, I recommend you do the same.
-
-If you are running on totient and want to try out the Clang compiler for
-building your matrix multiply kernel, you certainly may.  The driver
-uses OpenMP for timing; the kernel can be compiled with different flags.
-
-In October 2013, Intel contributed their OpenMP implementation to the
-Clang compiler, so I expect this caveat will no longer hold the next
-time this class is offered!
-
-### Notes on the Intel compilers
+### Building with Intel compilers
 
 You must load the intel, gcc, and openblas modules before building:
 `module load intel; module load gcc; module load openblas`
@@ -99,6 +82,24 @@ It is also worth noting that the Intel Fortran compiler with
 optimization does a fantastic job.  But if you choose to build from
 the Fortran routine as your starting point, you still have to improve
 the performance!
+
+### Building with Clang on OS X
+
+The driver code (`matmul.c`) uses the OpenMP `omp_get_wtime` routine
+for timing; unfortunately, the Clang compiler does not yet include
+OpenMP by default.  This means that if you want to use OpenMP -- even
+the timing routines -- you cannot use the default compiler under OS X
+Mavericks.  I have used a build of GCC 5.2.0 using HomeBrew.  If you
+are trying things out on an OS X box, I recommend you do the same.
+
+If you are running on totient and want to try out the Clang compiler for
+building your matrix multiply kernel, you certainly may.  The driver
+uses OpenMP for timing; the kernel can be compiled with different flags.
+
+In October 2013, Intel contributed their OpenMP implementation to the
+Clang compiler, so I expect this caveat will no longer hold the next
+time this class is offered!
+
 
 ### Notes on system BLAS
 
