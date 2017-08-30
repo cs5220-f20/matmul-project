@@ -50,7 +50,8 @@ generally does much better than the GCC optimizer on this type of code.
 For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial] (http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
 ### Building with GNU Compilers
 
-You must load the gcc and openblas modules before building:
+You must load the gcc and openblas modules before building ---load order matters!
+
 `module load gcc; module load openblas`
 
 You may notice the `-std=gnu99` flag in `Makefile.in.gcc`.  This tells
@@ -66,7 +67,8 @@ Why do we assume that a 25-year-old standard takes precedence over the
 
 ### Building with Intel compilers
 
-You must load the intel, gcc, and openblas modules before building:
+You must load the intel, gcc, and openblas modules before building ---load order matters!
+
 `module load intel; module load gcc; module load openblas`
 
 There are two things in the `Makefile.in.icc` file that are worth
@@ -105,8 +107,8 @@ time this class is offered!
 
 On the totient cluster, the Makefile is configured to link against
 OpenBLAS, a high-performance open-source BLAS library based on the Goto BLAS (as an aside, 
-there is an excellent NYTimes [article](http://www.nytimes.com/2005/11/28/technology/writing-the-fastest-code-by-hand-for-fun-a-human-computer-keeps.html?mcubz=1)) about the history behind Goto BLAS)
-This build also lets you link against the MKL BLAS (with the Intel compilers).
+there is an excellent NYTimes [article](http://www.nytimes.com/2005/11/28/technology/writing-the-fastest-code-by-hand-for-fun-a-human-computer-keeps.html?mcubz=1) about the history behind Goto BLAS)
+This build also lets you link against the MKL BLAS with the Intel compilers.
 
 On OS X, the Makefile is configured to link against the Accelerate
 framework with the `veclib` tag.
@@ -191,6 +193,10 @@ To clear up some of your workspace, use
 which will remove executables and compute node logs (but not your code or benchmarks). To remove everything except for code, use
 
     make realclean
+
+### Being Responsible
+
+As with all programming projects, do not run any compute-intensive code on the shared login node. Please run your code on the compute node via qsub, as this will allow the shared login node to operate smoothly for everyone else. 
 
 
 ## Plotting results
