@@ -47,7 +47,7 @@ script for these configurations, I would welcome it!
 I recommend using the Intel compiler on the cluster.  The optimizer
 generally does much better than the GCC optimizer on this type of code.
 
-For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial] (http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
+For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial](http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
 ### Building with GNU Compilers
 
 You must load the gcc and openblas modules before building ---load order matters!
@@ -228,6 +228,6 @@ script uses Pandas (which the system Python lacks).
 ## Optimization Tips and Tricks
 
 Please refer to these [notes](http://www.cs.cornell.edu/~bindel/class/cs5220-f11/notes/serial-tuning.pdf) to get started. The notes discuss blocking, buffering, SSE instructions, and auto-tuning, among other optimizations.
-The [Roofline Paper] (http://www.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf) discussed in class on 9/08/2015 is also worth looking at, although you might have to do a bit of extra reading. 
-The previous Project instructions for this assignment can be found [here] (https://bitbucket.org/dbindel/cs5220-s14/wiki/HW1). 
+The [Roofline Paper](http://www.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf) discussed in class on 9/08/2015 is also worth looking at, although you might have to do a bit of extra reading. 
+The previous Project instructions for this assignment can be found [here](https://bitbucket.org/dbindel/cs5220-s14/wiki/HW1). 
 Assume for the time being that the final submission instructions for this assignment have not changed. 
