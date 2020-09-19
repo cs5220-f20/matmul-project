@@ -208,5 +208,5 @@ and `timing-blas.csv`.
 ## Optimization Tips and Tricks
 
 Please refer to these [notes](http://www.cs.cornell.edu/~bindel/class/cs5220-f11/notes/serial-tuning.pdf) to get started. The notes discuss blocking, buffering, SSE instructions, and auto-tuning, among other optimizations.
-The [Roofline Paper](http://www.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf) discussed in class on 9/08/2015 is also worth looking at, although you might have to do a bit of extra reading. 
+The [Roofline Paper](http://www.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf) is also worth looking at.
 
