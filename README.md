@@ -28,11 +28,10 @@ The main files are:
 You will probably mostly be looking at `Makefile.in` and `dgemm_*.c`. Note that "dgemm" stands for "**D**ouble Precision **GE**neral **M**atrix **M**ultiply".   
 ## Makefile system
 
-I have built the reference code with three compilers:
+I have built the reference code with two compilers:
 
 1.  GCC 8.3.0 on Debian Buster on GCP (gcc)
 2.  CLang 7.0.1-8 on Debian Buster on GCP (clang)
-3.  Homebrew GCC 10 on my MacOS laptop (mac)
 
 You can switch between these options by adding `PLATFORM=clang` (for
 example) to your `make` command, or by changing the `PLATFORM=gcc`
@@ -44,17 +43,45 @@ drivers on my laptop, I run
 from the terminal.  If someone feels like adding an autoconf or CMake
 script for these configurations, I would welcome it!
 
-I recommend using the Intel compiler on the cluster.  The optimizer
-generally does much better than the GCC optimizer on this type of code.
+If you want to play around with the Intel compiler, it typically does
+much better than GCC on this type of code.  However, we can't install
+the Intel compiler on non-university machines under the terms of the
+educational license, so we will stick with GCC and CLang on GCP.
 
 For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial](http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
 
-### Building with GNU Compilers
+### Setting up your virtual machine
 
-You must load the gcc and openblas modules before building ---load order matters!
+We are going to install several packages to support this code.  You
+should use the `e2-micro` instance type that we considered in the GCP
+walkthrough on 9/17 (with Debian Buster as the recommended operating
+system).  With this setup, you will *need* the following packages:
 
-`module load gcc; module load openblas`
+- `build-essential`: GCC, Make, and various other basic tools for
+  working with compiled codes.
+- `pkg-config`: Used to semi-automatically figure out where to look
+  for various packages installed in the system (like the BLAS)
+- `gfortran`: You are going to want a Fortran compiler to be able to
+  test out the Fortran version of the DGEMM.  You may write your
+  optimized code in Fortran using this type of interface, if you want,
+  but it is not the default.
+- `clang`: The CLang compiler
+- `libomp-dev`: Support library for OpenMP with CLang
+- `git`: So you can fetch this repository
+- `libopenblas-base` and `libopenblas-dev`: The OpenBLAS library is a
+  fast BLAS implementation for modern Intel processors.
+- The Python stack: `python-numpy`, `python-scipy`, `python-pandas`, and
+  `python-matplotlib`
 
+I *recommend* also installing the following packages (which you may
+have already done):
+
+- `llvm`: To get access to the `llvm-mca` tool
+- `google-perftools`: The Google performance tools for profiling
+
+Once you have installed the compiler and the OpenBlas libraries,
+building with GCC is as simple as typing `make` (or `make
+PLATFORM=gcc`).  But it is worth poking through the Makefile.
 You may notice the `-std=gnu99` flag in `Makefile.in.gcc`.  This tells
 the compiler that we want to use the C99 language variant with
 extensions, though the only extension we are using is actually the
@@ -66,49 +93,36 @@ of the initializer clause in a `for` loop.
 Why do we assume that a 25-year-old standard takes precedence over the
 "new" 15-year-old standard?  Beats me, but this is what it is.
 
-### Building with Intel compilers
+### Building on MacOS
 
-You must load the intel, gcc, and openblas modules before building ---load order matters!
+Some of you use a Mac for development.  I have included `mac-gcc`
+and `mac-clang` for you to use if you want, but you have to have
+things installed right first.  Note that you are in no way obliged to
+use these things; I provide it solely for your own edification.
 
-`module load intel; module load gcc; module load openblas`
+By default, the `gcc` program in MacOS is not GCC at all; rather, it
+is an alias for Clang.  The driver code (`matmul.c`) uses the OpenMP
+`omp_get_wtime` routine for timing; but, the Apple version of Clang
+looks like it does not support OpenMP.  At least, I thought there was
+no OpenMP support until recently!  Then I read [this
+article](https://iscinumpy.gitlab.io/post/omp-on-high-sierra/) and
+learned better.  So assuming you have Homebrew installed, you can
+build with `make PLATFORM=mac-clang` provided that you first run the
+line
 
-There are two things in the `Makefile.in.icc` file that are worth
-noting if you want to use the Intel compilers and mix C and Fortran
-for this assignment.  First, we require `libirng` (the `-lirng` flag
-in the `LIBS` variable) in order to use `drand48`.  This library is
-included by default when we link using `icc`, but not when we link
-using `ifort`.  Second, we require the flag `-nofor_main` to tell the
-Fortran compiler that we are using C rather than Fortran to define the
-main routine.
+    brew install libomp
 
-It is also worth noting that the Intel Fortran compiler with
-optimization does a fantastic job.  But if you choose to build from
-the Fortran routine as your starting point, you still have to improve
-the performance!
+If you want to use the "real" GCC, make sure you do
 
-### Building with Clang on OS X
-
-The driver code (`matmul.c`) uses the OpenMP `omp_get_wtime` routine
-for timing; unfortunately, the Clang compiler does not yet include
-OpenMP by default.  This means that if you want to use OpenMP -- even
-the timing routines -- you cannot use the default compiler under OS X
-Mavericks.  I have used a build of GCC 5.2.0 using HomeBrew.  If you
-are trying things out on an OS X box, I recommend you do the same.
-
-If you are running on totient and want to try out the Clang compiler for
-building your matrix multiply kernel, you certainly may.  The driver
-uses OpenMP for timing; the kernel can be compiled with different flags.
-
-In October 2013, Intel contributed their OpenMP implementation to the
-Clang compiler, so I expect this caveat will no longer hold the next
-time this class is offered!
+    brew install gcc gfortran
+    
+and then you can build with `make PLATFORM=mac-gcc`.
 
 ### Notes on system BLAS
 
-On the totient cluster, the Makefile is configured to link against
+For GCP, the Makefile is configured to link against
 OpenBLAS, a high-performance open-source BLAS library based on the Goto BLAS (as an aside, 
 there is an excellent NYTimes [article](http://www.nytimes.com/2005/11/28/technology/writing-the-fastest-code-by-hand-for-fun-a-human-computer-keeps.html?mcubz=1) about the history behind Goto BLAS)
-This build also lets you link against the MKL BLAS with the Intel compilers.
 
 On OS X, the Makefile is configured to link against the Accelerate
 framework with the `veclib` tag.
@@ -156,35 +170,9 @@ also provide the file name as an argument, i.e.
 
     ./matmul-blocked timing-blocked.csv
 
-These commands run benchmarks on the *local machine*. If you're logged into Totient, this will usually be the *head node*. 
-To run benchmarks on a *compute node*, which will give completely different results, you want to use make commands (listed below). 
-Make sure to keep things consistent i.e. don't compare a head node benchmark with a computer node benchmark. 
-While testing on the head node is perfectly fine, your submitted benchmarks should be from a compute node, as I want to keep benchmarks consistent among the class.  
-
-The Makefile has targets for running the timer on the compute nodes
-on totient using the `job-*.pbs` scripts.  For example,
-
-    make timing-blocked.csv
-
-on totient will submit a PBS job to produce the timing-blocked.csv
-file.  To run all the timers on the compute nodes, you can use
+To run all the timers, you will probably want to use
 
     make run
-
-To run all the timers on your local machine, you will probably want
-to use
-
-    make run-local
-
-Note that the `.pbs` scripts do a little more than just running the
-job; they also set environment variables so that OpenBLAS, VecLib,
-and MKL don't get an unfair advantage by exploiting multiple cores.
-
-You can also manually submit the `.pbs` scripts to the compute nodes by using 
-
-    qsub job-*.pbs
-
-i.e. if you want to benchmark only your own code, you would type `qsub job-mine.pbs`. Note that this is what happens "under the hood" when you run the timers on the compute nodes with make commands.  
 
 To clear up some of your workspace, use 
 
@@ -194,11 +182,6 @@ which will remove executables and compute node logs (but not your code or benchm
 
     make realclean
 
-### Being Responsible
-
-As with all programming projects, do not run any compute-intensive code on the shared login node. Please run your code on the compute node via qsub, as this will allow the shared login node to operate smoothly for everyone else. 
-
-
 ## Plotting results
 
 You can produce timing plots by running
@@ -206,8 +189,7 @@ You can produce timing plots by running
     make plot
 
 The plotter assumes that all the relevant CSV files are already
-in place.  Note, though, that you can (for example) put the CSV
-files from totient onto your laptop and run `make plot`.
+in place.
 
 You can also directly use the `plotter.py` script.  The `plotter.py`
 script loads a batch of timings and turns them into a plot which is
@@ -220,14 +202,11 @@ or
     python plotter.py basic blocked blas
 
 will compare the contents of `timing-basic.csv`, `timing-blocked.csv`,
-and `timing-blas.csv`.  Note that you need to be using the Anaconda
-module if you are going to explicitly run the Python version, since the
-script uses Pandas (which the system Python lacks).
+and `timing-blas.csv`.
 
 
 ## Optimization Tips and Tricks
 
 Please refer to these [notes](http://www.cs.cornell.edu/~bindel/class/cs5220-f11/notes/serial-tuning.pdf) to get started. The notes discuss blocking, buffering, SSE instructions, and auto-tuning, among other optimizations.
 The [Roofline Paper](http://www.eecs.berkeley.edu/Pubs/TechRpts/2008/EECS-2008-134.pdf) discussed in class on 9/08/2015 is also worth looking at, although you might have to do a bit of extra reading. 
-The previous Project instructions for this assignment can be found [here](https://bitbucket.org/dbindel/cs5220-s14/wiki/HW1). 
-Assume for the time being that the final submission instructions for this assignment have not changed. 
+

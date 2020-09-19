@@ -1,0 +1,26 @@
+# Versions to build
+BUILDS=mine basic blocked veclib
+
+# C and Fortran compilers
+CC=clang
+LD=clang
+
+# Python (for plotting)
+PYTHON=python
+
+# Compiler optimization flags.  You will definitely want to play with these!
+OPTFLAGS = -O3 
+CFLAGS = -std=gnu99 -Xpreprocessor -fopenmp
+FFLAGS =
+LDFLAGS = -Xpreprocessor -fopenmp -lomp
+
+# Add -DDEBUG_RUN to CPPFLAGS to cut down on the cases.
+CPPFLAGS = "-DCOMPILER=\"$(CC)\"" "-DFLAGS=\"$(OPTFLAGS)\""
+
+# Compile a C version (using basic_dgemm.c, in this case):
+LIBS = -lm
+OBJS = matmul.o 
+
+# Libraries and include files for Accelerate framework.
+LIBBLAS=-framework Accelerate
+INCBLAS=-DOSX_ACCELERATE
