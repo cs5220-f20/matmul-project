@@ -5,7 +5,7 @@
 # to play with, you can put them in an appropriately-named Makefile.in.
 # For example, the default setup has a Makefile.in.icc and Makefile.in.gcc.
 
-PLATFORM=icc
+PLATFORM=gcc
 
 include Makefile.in.$(PLATFORM)
 DRIVERS=$(addprefix matmul-,$(BUILDS))
@@ -56,21 +56,18 @@ dgemm_veclib.o: dgemm_blas.c
 # ---
 # Rules for building timing CSV outputs
 
-.PHONY: run run-local
+.PHONY: run
 run:    $(TIMINGS)
 
-run-local:
-	( for build in $(BUILDS) ; do ./matmul-$$build ; done )
-
 timing-%.csv: matmul-%
-	qsub job-$*.pbs
+	OPENMP_NUM_THREADS=1 ./matmul-$*
 
 # ---
 #  Rules for plotting
 
 .PHONY: plot
 plot:
-	python plotter.py $(BUILDS)
+	$(PYTHON) plotter.py $(BUILDS)
 
 # ---
 
@@ -80,4 +77,3 @@ clean:
 
 realclean: clean
 	rm -f *~ timing-*.csv timing.pdf
-

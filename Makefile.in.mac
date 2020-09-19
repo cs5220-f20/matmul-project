@@ -2,9 +2,12 @@
 BUILDS=mine basic blocked f2c veclib
 
 # C and Fortran compilers
-CC=gcc-7
-FC=gfortran-7
+CC=gcc-10
+FC=gfortran-10
 LD=$(FC)
+
+# Python (for plotting)
+PYTHON=python
 
 # Compiler optimization flags.  You will definitely want to play with these!
 OPTFLAGS = -O3 
@@ -19,6 +22,6 @@ CPPFLAGS = "-DCOMPILER=\"$(CC)\"" "-DFLAGS=\"$(OPTFLAGS)\""
 LIBS = -lm
 OBJS = matmul.o 
 
-# Libraries and include files for ATLAS
+# Libraries and include files for Accelerate framework.
 LIBBLAS=-framework Accelerate
 INCBLAS=-DOSX_ACCELERATE

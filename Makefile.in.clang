@@ -1,30 +1,25 @@
 # Versions to build
-BUILDS=mine basic blocked f2c blas mkl
+BUILDS=mine basic blocked blas
 
-# C and Fortran compilers
-CC=icc
-FC=ifort 
-LD=ifort
+# C compilers
+CC=clang
+
+# Python (for plotting)
+PYTHON=python
 
 # Compiler optimization flags.  You will definitely want to play with these!
-OPTFLAGS = -O3
-CFLAGS = -std=gnu99 
-FFLAGS = 
-LDFLAGS = -fopenmp -nofor_main
+OPTFLAGS = -O3 
+CFLAGS = -std=c99 
+FFLAGS =
+LDFLAGS = -fopenmp
 
 # Add -DDEBUG_RUN to CPPFLAGS to cut down on the cases.
 CPPFLAGS = "-DCOMPILER=\"$(CC)\"" "-DFLAGS=\"$(OPTFLAGS)\""
 
 # Compile a C version (using basic_dgemm.c, in this case):
-LIBS = -lm -lirng
+LIBS = -lm 
 OBJS = matmul.o
 
 # Libraries and include files for BLAS
 LIBBLAS=`pkg-config --libs openblas`
 INCBLAS=`pkg-config --cflags openblas`
-
-
-# Libraries and include files for BLAS
-LIBMKL=-lmkl_intel_lp64 -lmkl_core -lmkl_sequential -lpthread -lm
-INCMKL=
-

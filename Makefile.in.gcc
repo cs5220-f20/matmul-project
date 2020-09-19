@@ -6,6 +6,9 @@ CC=gcc
 FC=gfortran
 LD=gfortran
 
+# Python (for plotting)
+PYTHON=python
+
 # Compiler optimization flags.  You will definitely want to play with these!
 OPTFLAGS = -O3 
 CFLAGS = -std=gnu99 

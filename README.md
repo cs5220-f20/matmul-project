@@ -30,11 +30,11 @@ You will probably mostly be looking at `Makefile.in` and `dgemm_*.c`. Note that 
 
 I have built the reference code with three compilers:
 
-1.  GCC 7.2.0 on the C4 Linux cluster (`gcc`)
-2.  The Intel compilers on the C4 Linux cluster (`icc`)
-3.  Homebrew GCC 5.2.0 on my OS X 10.9 laptop (`mac`)
+1.  GCC 8.3.0 on Debian Buster on GCP (gcc)
+2.  CLang 7.0.1-8 on Debian Buster on GCP (clang)
+3.  Homebrew GCC 10 on my MacOS laptop (mac)
 
-You can switch between these options by adding `PLATFORM=icc` (for
+You can switch between these options by adding `PLATFORM=clang` (for
 example) to your `make` command, or by changing the `PLATFORM=gcc`
 line at the top of the Makefile.  For example, to build all the
 drivers on my laptop, I run
@@ -48,6 +48,7 @@ I recommend using the Intel compiler on the cluster.  The optimizer
 generally does much better than the GCC optimizer on this type of code.
 
 For those who aren't familiar with the Makefile system and would like an overview, please consult these two links: [tutorial](http://mrbook.org/blog/tutorials/make/) [more in-depth tutorial](http://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html) 
+
 ### Building with GNU Compilers
 
 You must load the gcc and openblas modules before building ---load order matters!
@@ -101,7 +102,6 @@ uses OpenMP for timing; the kernel can be compiled with different flags.
 In October 2013, Intel contributed their OpenMP implementation to the
 Clang compiler, so I expect this caveat will no longer hold the next
 time this class is offered!
-
 
 ### Notes on system BLAS
 
