@@ -3,15 +3,16 @@ BUILDS=mine basic blocked blas
 
 # C compilers
 CC=clang
+LD=clang
 
 # Python (for plotting)
 PYTHON=python
 
 # Compiler optimization flags.  You will definitely want to play with these!
 OPTFLAGS = -O3 
-CFLAGS = -std=c99 
+CFLAGS = -std=gnu99 -fopenmp
 FFLAGS =
-LDFLAGS = -fopenmp
+LDFLAGS = -fopenmp=libomp 
 
 # Add -DDEBUG_RUN to CPPFLAGS to cut down on the cases.
 CPPFLAGS = "-DCOMPILER=\"$(CC)\"" "-DFLAGS=\"$(OPTFLAGS)\""
